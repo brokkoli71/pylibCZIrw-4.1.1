@@ -106,11 +106,11 @@ class CMakeBuild(build_ext):
             if os.path.exists(vcpkg_installation_root):
                 print(os.getuid()) # numeric uid
                 print(pwd.getpwuid(os.getuid()))
-                path = Path("/project/vcpkg")
+                path = Path("/project/vcpkg/vcpkg")
                 owner = path.owner()
                 group = path.group()
                 print(f"{path.name} is owned by {owner}:{group}")
-                st = os.stat("/project/vcpkg")
+                st = os.stat("/project/vcpkg/vcpkg")
                 oct_perm = oct(st.st_mode)
                 print(oct_perm)
                 check_and_install_packages(
@@ -148,7 +148,8 @@ class CMakeBuild(build_ext):
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
     for package in packages:
         vcpkg_executable = os.path.join(vcpkg_root, "vcpkg")
-        print(11)
+        print(vcpkg_executable)
+        print(package)
         result = subprocess.run(
             [vcpkg_executable, "list", package, f"--triplet={triplet}", f"--vcpkg-root={vcpkg_root}"],
             capture_output=True,
