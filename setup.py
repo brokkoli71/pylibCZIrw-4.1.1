@@ -46,6 +46,7 @@ class CMakeBuild(build_ext):
 
         for ext in self.extensions:
             self.build_extension(ext)
+            print(10)
 
     def build_extension(self, ext):
         path_var = os.environ.get("PATH")
@@ -111,8 +112,8 @@ class CMakeBuild(build_ext):
                 print(f"{path.name} is owned by {owner}:{group}")
                 st = os.stat("/project/vcpkg")
                 oct_perm = oct(st.st_mode)
-
                 print(oct_perm)
+                #subprocess.run("/bin/bash ls -lisa")
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
@@ -124,22 +125,25 @@ class CMakeBuild(build_ext):
             else:
                 print("Pacakge manager missing, attempting to build libcurl dependency locally.")
                 cmake_args += ["-DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LIBCURL=OFF"] # otherwise, we try to build libcurl ourselves (note: probably requires libssl-dev to be installed)
-
+            print(1)
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
             build_args += ["--", "-j2"]
 
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get("CXXFLAGS", ""), self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
+        print(2)
         if self.debug:
             print("cmake build path: " + self.build_temp)
             print("cmake compile: " + ["cmake", ext.sourcedir] + cmake_args)
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+        print(3)
         if self.debug:
             print("cmake build: " + ["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args)
         subprocess.check_call(
             ["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args, cwd=self.build_temp, env=env
         )
+        print(4)
 
 
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
