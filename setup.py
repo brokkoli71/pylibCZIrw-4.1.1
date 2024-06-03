@@ -113,7 +113,6 @@ class CMakeBuild(build_ext):
                 st = os.stat("/project/vcpkg")
                 oct_perm = oct(st.st_mode)
                 print(oct_perm)
-                subprocess.run("/bin/bash ls -lisa")
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
