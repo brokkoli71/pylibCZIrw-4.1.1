@@ -89,7 +89,7 @@ class CMakeBuild(build_ext):
               #  build to use it)
               print("Building static openssl and zlib dependencies locally.")
               subprocess.run("cd /tmp && git clone --branch v1.3 https://github.com/madler/zlib.git && cd zlib && CFLAGS=-fPIC ./configure --static && make -j2 && make install", shell=True)
-              subprocess.run("cd /tmp && git clone --branch openssl-3.2.0 https://github.com/openssl/openssl.git && cd openssl && mkdir build && ./config no-shared -static zlib -fPIC -L/usr/lib no-docs no-tests && make -j2", shell=True)
+              subprocess.run("cd /tmp && git clone --branch openssl-3.2 https://github.com/openssl/openssl.git && cd openssl && mkdir build && ./config no-shared -static zlib -fPIC -L/usr/lib no-docs no-tests && make -j2", shell=True)
               cmake_args += ["-DOPENSSL_USE_STATIC_LIBS=TRUE"]  # instruct to use the static version of libssl and libcrypto
               cmake_args += ["-DOPENSSL_ROOT_DIR=/tmp/openssl"]
               cmake_args += ["-DZLIB_USE_STATIC_LIBS=TRUE"]
