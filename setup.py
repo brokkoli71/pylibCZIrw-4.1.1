@@ -156,7 +156,7 @@ def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: st
             text=True,
         )
         print(12)
-    if package in result.stdout:
+        if package in result.stdout:
             print(f"{package} is already installed.")
         else:
             print(f"Installing {package}")
