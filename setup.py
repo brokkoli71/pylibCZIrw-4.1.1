@@ -149,12 +149,14 @@ class CMakeBuild(build_ext):
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
     for package in packages:
         vcpkg_executable = os.path.join(vcpkg_root, "vcpkg")
+        print(11)
         result = subprocess.run(
             [vcpkg_executable, "list", package, f"--triplet={triplet}", f"--vcpkg-root={vcpkg_root}"],
             capture_output=True,
             text=True,
         )
-        if package in result.stdout:
+        print(12)
+    if package in result.stdout:
             print(f"{package} is already installed.")
         else:
             print(f"Installing {package}")
