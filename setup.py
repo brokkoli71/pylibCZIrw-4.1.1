@@ -3,6 +3,7 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 import os
+import pwd
 from pathlib import Path
 import platform
 import re
@@ -101,7 +102,8 @@ class CMakeBuild(build_ext):
             test = os.path.exists(vcpkg_installation_root)
             print(f"path exists is: {test} ")
             if os.path.exists(vcpkg_installation_root):
-                print(subprocess.run("/usr/bin/sh -c 'id&&pwd&&ls -lisa&&ls -lisa /project'"))
+                print(os.getuid()) # numeric uid
+                print(pwd.getpwuid(os.getuid()))
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
