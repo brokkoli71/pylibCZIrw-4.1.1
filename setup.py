@@ -9,6 +9,7 @@ import platform
 import re
 import subprocess
 import sys
+import stat
 from distutils.version import LooseVersion
 from typing import List
 
@@ -104,6 +105,14 @@ class CMakeBuild(build_ext):
             if os.path.exists(vcpkg_installation_root):
                 print(os.getuid()) # numeric uid
                 print(pwd.getpwuid(os.getuid()))
+                path = Path("/project/vcpkg")
+                owner = path.owner()
+                group = path.group()
+                print(f"{path.name} is owned by {owner}:{group}")
+                st = os.stat("/project/vcpkg")
+                oct_perm = oct(st.st_mode)
+
+                print(oct_perm)
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
