@@ -101,6 +101,7 @@ class CMakeBuild(build_ext):
             test = os.path.exists(vcpkg_installation_root)
             print(f"path exists is: {test} ")
             if os.path.exists(vcpkg_installation_root):
+                print(subprocess.run("whoami;id;pwd;ls -lisa;ls -lisa /project"))
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
