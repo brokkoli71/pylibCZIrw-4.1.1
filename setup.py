@@ -105,10 +105,12 @@ class CMakeBuild(build_ext):
                 check_and_install_packages(
                     packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
                 )
+                print(f"{self.debug=}")
                 cmake_args += [
                     "-DCMAKE_TOOLCHAIN_FILE="
                     + os.path.join(vcpkg_installation_root, "scripts", "buildsystems", "vcpkg.cmake")
                 ]
+                print(f"current {cmake_args=}")
                 cmake_args += ["-DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LIBCURL=ON"]  # if curl is available via vcpkg, then instruct to use the package-manager provided libcurl
             else:
                 print("Pacakge manager missing, attempting to build libcurl dependency locally.")
@@ -145,6 +147,7 @@ def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: st
             print(f"Installing {package}")
             subprocess.run([vcpkg_executable, "install", package, f"--triplet={triplet}", f"--vcpkg-root={vcpkg_root}"])
     print(f"Installations complete")
+    print(f"this is a debug msg")
 
 
 setup(
