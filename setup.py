@@ -56,13 +56,13 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE=" + sys.executable,  # used for pybind11
         ]
 
-        cfg = "Debug" if self.debug else "Release"
+        cfg = "Release" # cfg = "Debug" if self.debug else "Release"
         build_args = ["--config", cfg]
 
         cmake_args += ["-DLIBCZI_BUILD_DYNLIB=OFF"]            # we don't need the dynamic library
         cmake_args += ["-DLIBCZI_BUILD_UNITTESTS=OFF"]         # also, we don't need the unit tests
         cmake_args += ["-DLIBCZI_BUILD_CURL_BASED_STREAM=ON"]  # and we want a version which is "libcurl-enabled"
-
+        print(f"{platform.system()=}")
         if platform.system() == "Windows":
             cmake_args += ["-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), extdir)]
             cmake_args += ["-DVCPKG_TARGET_TRIPLET=x64-windows-static"]
@@ -118,7 +118,8 @@ class CMakeBuild(build_ext):
 
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
             build_args += ["--", "-j2"]
-
+            if True: #TODO: only on macos
+                build_args += ["-DCMAKE_C_COMPILER=/usr/local/gcc"]
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get("CXXFLAGS", ""), self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
