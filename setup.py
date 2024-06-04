@@ -81,7 +81,7 @@ class CMakeBuild(build_ext):
                 raise RuntimeError("vcpkg installation not found, please define your VCPKG_INSTALLATION_ROOT path")
 
             build_args += ["--", "/m"]
-        else:  # Linux
+        else:  # Linux or MacOS
             # Get the value of the environment variable
             manylinux_env_variable = os.environ.get('AUDITWHEEL_PLAT', '').lower()
             if 'manylinux' in manylinux_env_variable:
@@ -118,7 +118,7 @@ class CMakeBuild(build_ext):
 
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
             build_args += ["--", "-j2"]
-            if True: #TODO: only on macos
+            if platform.system()!="Linux": #MacOS
                 build_args += ["-DCMAKE_C_COMPILER=/usr/bin/gcc"]
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get("CXXFLAGS", ""), self.distribution.get_version())
         if not os.path.exists(self.build_temp):
