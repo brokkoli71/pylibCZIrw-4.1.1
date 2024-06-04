@@ -167,7 +167,7 @@ setup(
     cmdclass=dict(build_ext=CMakeBuild),
     install_requires=requirements,
     # we require at least python version 3.7
-    python_requires=">=3.7,<3.12",
+    python_requires=">=3.7,<4",
     license_files=["COPYING.txt", "COPYING.LESSER.txt", "NOTICE.txt"],
     # Classifiers help users find your project by categorizing it.
     # For a list of valid classifiers, see https://pypi.org/classifiers/
