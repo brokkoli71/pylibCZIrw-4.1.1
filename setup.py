@@ -46,6 +46,7 @@ class CMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
+        self.debug = True;
         path_var = os.environ.get("PATH")
         path_var = str(Path(sys.executable).parent) + ":" + path_var
         env = dict(os.environ.copy(), PATH=path_var)
