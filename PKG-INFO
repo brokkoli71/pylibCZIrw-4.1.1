@@ -15,7 +15,7 @@ Classifier: Programming Language :: Python :: 3.11
 Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
 Classifier: Operating System :: Microsoft :: Windows
 Classifier: Operating System :: Unix
-Requires-Python: >=3.7,<3.12
+Requires-Python: >=3.7,<4
 Description-Content-Type: text/markdown
 License-File: COPYING.txt
 License-File: COPYING.LESSER.txt
