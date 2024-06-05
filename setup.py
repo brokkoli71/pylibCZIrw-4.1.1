@@ -130,9 +130,12 @@ class CMakeBuild(build_ext):
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         if self.debug:
             print("cmake build: " + str(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args))
-        subprocess.check_call(
-            ["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args, cwd=self.build_temp, env=env
-        )
+
+        try:
+            subprocess.check_output(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args,
+                cwd=self.build_temp, env=env, shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
 
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
