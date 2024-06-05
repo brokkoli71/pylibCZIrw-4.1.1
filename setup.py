@@ -130,12 +130,10 @@ class CMakeBuild(build_ext):
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         if self.debug:
             print("cmake build: " + str(["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args))
-        try:
-            subprocess.check_call(
-                ["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args, cwd=self.build_temp, env=env
-            )
-        except Exception as e:
-            print (e)
+        subprocess.check_call(
+            ["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args, cwd=self.build_temp, env=env
+        )
+
 
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
     for package in packages:
