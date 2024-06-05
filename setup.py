@@ -129,7 +129,7 @@ class CMakeBuild(build_ext):
             print("cmake compile: " + str(["cmake", ext.sourcedir] + cmake_args))
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         if self.debug:
-            print("cmake build: " + str(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args))
+            print("cmake build: " + str(["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args))
         subprocess.check_call(
             ["cmake", "--build", ".", "--target", "_pylibCZIrw"] + build_args, cwd=self.build_temp, env=env
         )
