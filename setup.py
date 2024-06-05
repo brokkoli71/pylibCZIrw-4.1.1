@@ -46,7 +46,6 @@ class CMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
-        self.debug = True;
         path_var = os.environ.get("PATH")
         path_var = str(Path(sys.executable).parent) + ":" + path_var
         env = dict(os.environ.copy(), PATH=path_var)
@@ -56,13 +55,13 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE=" + sys.executable,  # used for pybind11
         ]
 
-        cfg = "Release" # cfg = "Debug" if self.debug else "Release"
+        cfg = "Debug" if self.debug else "Release"
         build_args = ["--config", cfg]
 
         cmake_args += ["-DLIBCZI_BUILD_DYNLIB=OFF"]            # we don't need the dynamic library
         cmake_args += ["-DLIBCZI_BUILD_UNITTESTS=OFF"]         # also, we don't need the unit tests
         cmake_args += ["-DLIBCZI_BUILD_CURL_BASED_STREAM=ON"]  # and we want a version which is "libcurl-enabled"
-        print(f"{platform.system()=}")
+
         if platform.system() == "Windows":
             cmake_args += ["-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), extdir)]
             cmake_args += ["-DVCPKG_TARGET_TRIPLET=x64-windows-static"]
@@ -102,15 +101,14 @@ class CMakeBuild(build_ext):
             test = os.path.exists(vcpkg_installation_root)
             print(f"path exists is: {test} ")
             if os.path.exists(vcpkg_installation_root):
+                triplet = "arm64-osx" if platform.system() == "Darwin" else "x64-linux" #TODO for macos<=13 (Intel) needs x64-osx
                 check_and_install_packages(
-                    packages=["curl[ssl]"], triplet="x64-linux", vcpkg_root=vcpkg_installation_root
+                    packages=["curl[ssl]"], triplet=triplet, vcpkg_root=vcpkg_installation_root
                 )
-                print(f"{self.debug=}")
                 cmake_args += [
                     "-DCMAKE_TOOLCHAIN_FILE="
                     + os.path.join(vcpkg_installation_root, "scripts", "buildsystems", "vcpkg.cmake")
                 ]
-                print(f"current {cmake_args=}")
                 cmake_args += ["-DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LIBCURL=ON"]  # if curl is available via vcpkg, then instruct to use the package-manager provided libcurl
             else:
                 print("Pacakge manager missing, attempting to build libcurl dependency locally.")
@@ -118,14 +116,12 @@ class CMakeBuild(build_ext):
 
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
             build_args += ["--", "-j2"]
-            if platform.system()!="Linux": #MacOS
-                build_args += ["-DCMAKE_C_COMPILER=/usr/bin/gcc"]
+
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get("CXXFLAGS", ""), self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         if self.debug:
             print("cmake build path: " + self.build_temp)
-            print(f"{ext.sourcedir=}")
             print("cmake compile: " + str(["cmake", ext.sourcedir] + cmake_args))
         subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         if self.debug:
@@ -149,7 +145,6 @@ def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: st
             print(f"Installing {package}")
             subprocess.run([vcpkg_executable, "install", package, f"--triplet={triplet}", f"--vcpkg-root={vcpkg_root}"])
     print(f"Installations complete")
-    print(f"this is a debug msg")
 
 
 setup(
