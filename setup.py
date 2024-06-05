@@ -131,12 +131,8 @@ class CMakeBuild(build_ext):
         if self.debug:
             print("cmake build: " + str(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args))
 
-        try:
-            cmake_build_output = subprocess.check_output(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args,
-                cwd=self.build_temp, env=env, stderr=subprocess.STDOUT)
-        except Error as e:
-            print(e.output)
-            exit(0)
+        cmake_build_output = subprocess.check_output(["cmake", "--trace", "--build", ".", "--target", "_pylibCZIrw"] + build_args,
+            cwd=self.build_temp, env=env, stderr=subprocess.STDOUT)
         raise RuntimeError(f"{cmake_build_output=}")
 
 
