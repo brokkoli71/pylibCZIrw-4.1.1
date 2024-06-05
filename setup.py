@@ -136,7 +136,6 @@ class CMakeBuild(build_ext):
             )
         except Exception as e:
             print (e)
-            raise Exception("")
 
 def check_and_install_packages(packages: List[str], triplet: str, vcpkg_root: str) -> None:
     for package in packages:
